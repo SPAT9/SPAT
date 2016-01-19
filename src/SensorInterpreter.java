@@ -10,7 +10,8 @@ import java.util.logging.Level;
 	 *  10,Temp,Int Temp,24.91,20.33  - internal temperature monitor
 	 *  
 	 *  Hft Sensor
-	 *  NODE ID, DENSOR TYPE, SENSOR NAME, HEAT FLUX DATA, AIR TEMP, SURFACE TEMP
+	 *  NODE ID, SENSOR TYPE, SENSOR NAME, HEAT FLUX DATA, AIR TEMP, SURFACE TEMP
+	 *  13,"HFT","HFT sensor",23.55,12.66,12.6
 	 */
 public class SensorInterpreter {
 	
@@ -44,7 +45,7 @@ public class SensorInterpreter {
 		id = dataScanner.nextInt();
 		type = dataScanner.next();
 		name = dataScanner.next();
-		//Find out what type of sensor data this is
+		//Find out what type of sensor data this is and add info specific to that data
 		switch (type){
 		case ("Temp"):
 			controller.getLogger().log(Level.INFO,"Temp Data detected....");
@@ -63,7 +64,7 @@ public class SensorInterpreter {
 			controller.getLogger().log(Level.WARNING,"EXCEPTION! Data did not match any expected format.");
 			throw new IllegalArgumentException("The data recived was did not match the expected format.");
 		}
-		
+		controller.getLogger().log(Level.INFO,"SensorData object generated.");
 		return newSensorData;
 		
 	}

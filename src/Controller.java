@@ -11,24 +11,18 @@ public class Controller
 	//private PortListener listener;
 	private GUI view;
 	private SensorInterpreter interpreter;
+	private TestPortListener testPortListener;
 	private final static Logger LOGGER = Logger.getLogger(Controller.class.getName());
+	
 
 	public Controller()
 	{
-		/*listener = new PortListener();
-		
-		try {
-			listener.initialise();
-			LOGGER.log(Level.INFO, "Port Listener initisilised.");
-		} catch(PortNotFoundException e) {
-			LOGGER.log(Level.WARNING, "Port Listener failed to initisilise.");
-			e.printStackTrace();
-		}*/
-		//view = new GUI(this);
-		interpreter = new SensorInterpreter(this);
 		
 	}
 	
+	public void startListening(){
+		if (testPortListener == null) testPortListener = new TestPortListener(view, this);
+	}
 	
 	public Logger getLogger(){
 		return LOGGER;

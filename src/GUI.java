@@ -51,7 +51,10 @@ public class GUI extends Application{
 		buttonStart.setLayoutX(10);
 		buttonStart.setLayoutY(10);
 		buttonStart.setOnAction((event) -> {
-			if (testPortListener == null) testPortListener = new TestPortListener(this, controller);
+			if (testPortListener == null) {
+				 addDataToView("*****Listening to port******");
+				testPortListener = new TestPortListener(this, controller);
+			}
 		});
 			
 		buttonStop = new Button("Stop");
