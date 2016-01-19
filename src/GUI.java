@@ -1,5 +1,7 @@
 
 
+import java.util.logging.Level;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,21 +22,25 @@ public class GUI extends Application{
 	private Button buttonStop;
 	private ListView incomingDataView;
 	private PortListener portListener;
-	
-	public static void main(String[] args) {
-		launch(args);
+	private Controller controller;
+	private TestPortListener testPortListener;
 		
+	public static void main(String[] args)
+	{
+		launch(args);
 	}
+	
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		
+		this.controller= new Controller();
 		stage.setScene(scene);
 		stage.show();
 		stage.setTitle("Title goes here");
 		
 		addElements();
-		
+		controller.getLogger().log(Level.INFO, "GUI booted.");
 	}
 
 	/**
@@ -45,15 +51,8 @@ public class GUI extends Application{
 		buttonStart.setLayoutX(10);
 		buttonStart.setLayoutY(10);
 		buttonStart.setOnAction((event) -> {
-			PortListener listener = new PortListener();
-			try {
-				listener.initialise();
-			} catch(Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			if (testPortListener == null) testPortListener = new TestPortListener(this, controller);
 		});
-		
 			
 		buttonStop = new Button("Stop");
 		buttonStop.setLayoutX(10);
@@ -65,7 +64,7 @@ public class GUI extends Application{
 		incomingDataView = new ListView();
 		incomingDataView.setLayoutX(200);
 		incomingDataView.setLayoutY(10);
-		incomingDataView.setPrefSize(350, 350);
+		incomingDataView.setPrefSize(450, 500);
 		
 		root.getChildren().addAll(buttonStart ,buttonStop, incomingDataView);
 	}

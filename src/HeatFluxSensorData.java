@@ -1,5 +1,5 @@
 
-public class HeatFluxSensorData extends ExternalTemperatureSensorData {
+public class HeatFluxSensorData extends TemperatureSensorData {
 
 	private double heatFluxData;
 

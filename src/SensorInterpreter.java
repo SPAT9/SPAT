@@ -1,8 +1,9 @@
 import java.util.Scanner;
+import java.util.logging.Level;
 
 
 /**
-	 * Takes input from usb as CSS into a data object.
+	 * Takes input from usb as comer separated string into a data object.
 	 * 
 	 * 	Temp Sensor
 	 * 	NODE ID,TYPE,NAME,AIR TEMP,SURFACE TEMP 
@@ -14,10 +15,11 @@ import java.util.Scanner;
 public class SensorInterpreter {
 	
 	Scanner dataScanner;
-	
+	Controller controller;
 
-	public SensorInterpreter() {
-		System.out.println("I'm alive!");
+	public SensorInterpreter(Controller controller) {
+		this.controller = controller; 
+		controller.getLogger().log(Level.INFO,"SensorInterpreter initsilised.");
 	}
 	
 	/**
@@ -33,8 +35,8 @@ public class SensorInterpreter {
 		String name;
 		double airTemp;
 		double surfaceTemp; 
-		ExternalTemperatureSensorData newSensorData = null;
-		System.out.println("Data passed to interpreter = " + data);
+		TemperatureSensorData newSensorData = null;
+		controller.getLogger().log(Level.INFO,"Data passed to interpreter = " + data);
 		//set up the scanner
 		dataScanner = new Scanner(data);
 		dataScanner.useDelimiter(",");
@@ -45,19 +47,20 @@ public class SensorInterpreter {
 		//Find out what type of sensor data this is
 		switch (type){
 		case ("Temp"):
-			System.out.println("Temp Data detected....");
+			controller.getLogger().log(Level.INFO,"Temp Data detected....");
 			airTemp = dataScanner.nextDouble();
 			surfaceTemp = dataScanner.nextDouble();
-			newSensorData = new ExternalTemperatureSensorData(id, name, airTemp, surfaceTemp);
+			newSensorData = new TemperatureSensorData(id, name, airTemp, surfaceTemp);
 			break;
 		case ("HFT"):
-			System.out.println("HFT Data detected....");
+			controller.getLogger().log(Level.INFO,"HFT Data detected....");
 			double heatFlux = dataScanner.nextDouble();
 			airTemp = dataScanner.nextDouble();
 			surfaceTemp = dataScanner.nextDouble();
 			newSensorData = new HeatFluxSensorData(id, name, airTemp, surfaceTemp, heatFlux);
 			break;
 		default:
+			controller.getLogger().log(Level.WARNING,"EXCEPTION! Data did not match any expected format.");
 			throw new IllegalArgumentException("The data recived was did not match the expected format.");
 		}
 		

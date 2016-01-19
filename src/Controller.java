@@ -1,26 +1,39 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+
+
 public class Controller
 {
-	private PortListener listener;
+	//private PortListener listener;
 	private GUI view;
 	private SensorInterpreter interpreter;
+	private final static Logger LOGGER = Logger.getLogger(Controller.class.getName());
 
-	public Controller(String[] args)
+	public Controller()
 	{
-		listener = new PortListener();
+		/*listener = new PortListener();
+		
 		try {
 			listener.initialise();
+			LOGGER.log(Level.INFO, "Port Listener initisilised.");
 		} catch(PortNotFoundException e) {
-			// TODO Auto-generated catch block
+			LOGGER.log(Level.WARNING, "Port Listener failed to initisilise.");
 			e.printStackTrace();
-		}
-		view = new GUI();
-		interpreter = new SensorInterpreter();
-		GUI.launch(args);
+		}*/
+		//view = new GUI(this);
+		interpreter = new SensorInterpreter(this);
+		
 	}
 	
-	public static void main(String[] args)
-	{
-		new Controller(args);
+	
+	public Logger getLogger(){
+		return LOGGER;
 	}
+
+	
 
 }

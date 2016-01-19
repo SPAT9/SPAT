@@ -36,7 +36,7 @@ public class PortListener implements SerialPortEventListener
 	
 	public PortListener()
 	{
-		interpreter = new SensorInterpreter();
+		interpreter = new SensorInterpreter(null);
 	}
 	
 	public void initialise() throws PortNotFoundException
