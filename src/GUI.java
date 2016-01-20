@@ -23,12 +23,8 @@ public class GUI extends Application
 	private Button buttonStart ;
 	private Button buttonStop;
 	private ListView incomingDataView;
-	private PortListener portListener;
-	private PortListener listener;
-	
-		
-	
-
+//	private PortListener portListener;
+	private SerialListener listener;
 	public static void main(String[] args)
 	{
 		launch(args);
@@ -57,7 +53,7 @@ public class GUI extends Application
 		buttonStart.setOnAction((event) -> {
 			if (listener == null) {
 				this.addDataToView("*****Listening to port******");
-				listener = new PortListener(this);
+				listener = new SerialListener(this);
 				try {
 					listener.initialise();
 				} catch(Exception e) {

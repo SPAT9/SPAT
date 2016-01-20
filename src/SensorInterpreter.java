@@ -56,14 +56,18 @@ public class SensorInterpreter {
 			case ("Temp"):
 				GUI.LOGGER.log(Level.INFO,"Temp Data detected....");
 				airTemp = dataScanner.nextDouble();
-				surfaceTemp = dataScanner.nextDouble();
+				String itsADouble = dataScanner.next(); 
+				surfaceTemp = Double.parseDouble(itsADouble);
+//				surfaceTemp = dataScanner.nextDouble();
 				newSensorData = new SensorData(sessionID,id, name, airTemp, surfaceTemp);
 				break;
 			case ("HFT"):
 				GUI.LOGGER.log(Level.INFO,"HFT Data detected....");
 				double heatFlux = dataScanner.nextDouble();
 				airTemp = dataScanner.nextDouble();
-				surfaceTemp = dataScanner.nextDouble();
+				String itsAnotherDouble = dataScanner.next(); 
+				surfaceTemp = Double.parseDouble(itsAnotherDouble);
+//				surfaceTemp = 0d;//dataScanner.nextDouble();
 				newSensorData = new HeatFluxSensorData(sessionID, id, name, airTemp, surfaceTemp, heatFlux);
 				break;
 			default:
@@ -77,8 +81,5 @@ public class SensorInterpreter {
 		
 		return newSensorData;
 	}
-	
-	
-	
 
 }
