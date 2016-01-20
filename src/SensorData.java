@@ -7,11 +7,13 @@ import java.sql.Timestamp;
  */
 public abstract class SensorData {
 	
-	private int nodeID;
+	private int sensorID;
 	private String sensorType;
 	private String sensorName;
 	private double airTemp;
 	private Timestamp time;
+	private int sessionID;
+
 	
 	//TODO add timeStamp to object
 	
@@ -22,25 +24,25 @@ public abstract class SensorData {
 	 * @param sensorName The sensor name
 	 * @param airTemp the recorded air temp
 	 */
-	public SensorData(int nodeID, String sensorName,
+	public SensorData(int sessionID, int nodeID, String sensorName,
 			double airTemp) {
 		super();
-		this.nodeID = nodeID;
+		this.sensorID = nodeID;
 		this.sensorName = sensorName;
 		this.airTemp = airTemp;
 				
-		 java.util.Date date= new java.util.Date();
-		 this.time = new Timestamp(date.getTime());
-		 
+		java.util.Date date= new java.util.Date();
+		this.time = new Timestamp(date.getTime());
+		this.sessionID= sessionID;
 	}
 	
 	
 
 	public int getNodeID() {
-		return nodeID;
+		return sensorID;
 	}
 	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
+		this.sensorID = nodeID;
 	}
 	public String getSensorType() {
 		return sensorType;
@@ -61,10 +63,16 @@ public abstract class SensorData {
 		this.airTemp = airTemp;
 	}
 	
+	public Timestamp getTime() {
+		return time;
+	}
+
+
+
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder(time + " : " + nodeID + ", ");
+		StringBuilder builder = new StringBuilder(time + " : " + sensorID + ", ");
 		builder.append(sensorType + ", ");
 		builder.append(sensorName + ", ");
 		builder.append(airTemp);

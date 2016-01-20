@@ -3,9 +3,9 @@ public class HeatFluxSensorData extends TemperatureSensorData {
 
 	private double heatFluxData;
 
-	public HeatFluxSensorData(int nodeID, String sensorName, double airTemp,
+	public HeatFluxSensorData(int sessionID, int nodeID, String sensorName, double airTemp,
 			double surfaceTemp, double heatFluxData) {
-		super(nodeID, sensorName, airTemp, surfaceTemp);
+		super(sessionID, nodeID, sensorName, airTemp, surfaceTemp);
 		this.setSensorType("Heat Flux");
 		this.setHeatFluxData(heatFluxData);
 	}

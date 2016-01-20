@@ -10,9 +10,9 @@ public class TemperatureSensorData extends SensorData {
 	 * @param airTemp The air temp recorded
 	 * @param surfaceTemp the surface temp recorded
 	 */
-	public TemperatureSensorData(int nodeID, String sensorName,
+	public TemperatureSensorData(int sessionID, int nodeID, String sensorName,
 			double airTemp, double surfaceTemp) {
-		super(nodeID, sensorName, airTemp);
+		super(sessionID, nodeID, sensorName, airTemp);
 		this.surfaceTemp = surfaceTemp;
 		this.setSensorType("External Temperature");
 	}

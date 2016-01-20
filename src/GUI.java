@@ -25,7 +25,10 @@ public class GUI extends Application
 	private ListView incomingDataView;
 	private PortListener portListener;
 	private PortListener listener;
+	private Session session;
 		
+	
+
 	public static void main(String[] args)
 	{
 		launch(args);
@@ -52,6 +55,7 @@ public class GUI extends Application
 		buttonStart.setLayoutY(10);
 		buttonStart.setOnAction((event) -> {
 			if (listener == null) {
+				session = new Session();
 				addDataToView("*****Listening to port******");
 				listener = new PortListener(this);
 				try {
@@ -90,6 +94,14 @@ public class GUI extends Application
 		Platform.runLater(() -> {
 			incomingDataView.getItems().add(Data);
 		});
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
 	}
 
 }

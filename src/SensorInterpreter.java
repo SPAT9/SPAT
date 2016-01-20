@@ -37,12 +37,14 @@ public class SensorInterpreter {
 		double airTemp;
 		double surfaceTemp;
 		TemperatureSensorData newSensorData = null;
+		int sessionID = gui.getSession().getCurrentSession();
 		gui.LOGGER.log(Level.INFO,"Data passed to interpreter = " + data);
 		//set up the scanner
 		dataScanner = new Scanner(data);
 		dataScanner.useDelimiter(",");
 		//take the first 3 bits of data, which are always the same
 		try {
+			
 			id = dataScanner.nextInt();
 			type = dataScanner.next();
 			name = dataScanner.next();
@@ -55,14 +57,14 @@ public class SensorInterpreter {
 				gui.LOGGER.log(Level.INFO,"Temp Data detected....");
 				airTemp = dataScanner.nextDouble();
 				surfaceTemp = dataScanner.nextDouble();
-				newSensorData = new TemperatureSensorData(id, name, airTemp, surfaceTemp);
+				newSensorData = new TemperatureSensorData(sessionID,id, name, airTemp, surfaceTemp);
 				break;
 			case ("HFT"):
 				gui.LOGGER.log(Level.INFO,"HFT Data detected....");
 				double heatFlux = dataScanner.nextDouble();
 				airTemp = dataScanner.nextDouble();
 				surfaceTemp = dataScanner.nextDouble();
-				newSensorData = new HeatFluxSensorData(id, name, airTemp, surfaceTemp, heatFlux);
+				newSensorData = new HeatFluxSensorData(sessionID, id, name, airTemp, surfaceTemp, heatFlux);
 				break;
 			default:
 				gui.LOGGER.log(Level.WARNING,"EXCEPTION! Data did not match any expected format.");
