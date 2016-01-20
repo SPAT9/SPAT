@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -16,11 +17,10 @@ import java.util.logging.Level;
 public class SensorInterpreter {
 	
 	Scanner dataScanner;
-	Controller controller;
+	GUI gui;
 
-	public SensorInterpreter(Controller controller) {
-		this.controller = controller; 
-		controller.getLogger().log(Level.INFO,"SensorInterpreter initsilised.");
+	public SensorInterpreter(GUI gui) {
+		this.gui = gui; 
 	}
 	
 	/**
@@ -31,40 +31,46 @@ public class SensorInterpreter {
 	 * @return the newly creates <code>SensorData</code> object.
 	 */
 	public SensorData interpret(String data){
-		int id;
-		String type;
-		String name;
+		int id = -1;
+		String type = null;
+		String name = null;
 		double airTemp;
-		double surfaceTemp; 
+		double surfaceTemp;
 		TemperatureSensorData newSensorData = null;
-		controller.getLogger().log(Level.INFO,"Data passed to interpreter = " + data);
+		gui.LOGGER.log(Level.INFO,"Data passed to interpreter = " + data);
 		//set up the scanner
 		dataScanner = new Scanner(data);
 		dataScanner.useDelimiter(",");
 		//take the first 3 bits of data, which are always the same
-		id = dataScanner.nextInt();
-		type = dataScanner.next();
-		name = dataScanner.next();
-		//Find out what type of sensor data this is and add info specific to that data
-		switch (type){
-		case ("Temp"):
-			controller.getLogger().log(Level.INFO,"Temp Data detected....");
-			airTemp = dataScanner.nextDouble();
-			surfaceTemp = dataScanner.nextDouble();
-			newSensorData = new TemperatureSensorData(id, name, airTemp, surfaceTemp);
-			break;
-		case ("HFT"):
-			controller.getLogger().log(Level.INFO,"HFT Data detected....");
-			double heatFlux = dataScanner.nextDouble();
-			airTemp = dataScanner.nextDouble();
-			surfaceTemp = dataScanner.nextDouble();
-			newSensorData = new HeatFluxSensorData(id, name, airTemp, surfaceTemp, heatFlux);
-			break;
-		default:
-			controller.getLogger().log(Level.WARNING,"EXCEPTION! Data did not match any expected format.");
-			throw new IllegalArgumentException("The data recived was did not match the expected format.");
+		try {
+			id = dataScanner.nextInt();
+			type = dataScanner.next();
+			name = dataScanner.next();
+		} catch(InputMismatchException e) {
+			gui.LOGGER.log(Level.WARNING, "Incomplete data disregarded: " + data);
 		}
-		controller.getLogger().log(Level.INFO,"SensorData object generated.");
+		//Find out what type of sensor data this is and add info specific to that data
+		if(type != null) {switch (type){
+			case ("Temp"):
+				gui.LOGGER.log(Level.INFO,"Temp Data detected....");
+				airTemp = dataScanner.nextDouble();
+				surfaceTemp = dataScanner.nextDouble();
+				newSensorData = new TemperatureSensorData(id, name, airTemp, surfaceTemp);
+				break;
+			case ("HFT"):
+				gui.LOGGER.log(Level.INFO,"HFT Data detected....");
+				double heatFlux = dataScanner.nextDouble();
+				airTemp = dataScanner.nextDouble();
+				surfaceTemp = dataScanner.nextDouble();
+				newSensorData = new HeatFluxSensorData(id, name, airTemp, surfaceTemp, heatFlux);
+				break;
+			default:
+				gui.LOGGER.log(Level.WARNING,"EXCEPTION! Data did not match any expected format.");
+				throw new IllegalArgumentException("The data recived was did not match the expected format.");
+			}
+			gui.LOGGER.log(Level.INFO,"SensorData object generated.");
+		}
+		
 		return newSensorData;
 		
 	}

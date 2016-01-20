@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.logging.Level;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -34,8 +35,9 @@ public class PortListener implements SerialPortEventListener
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 115200;
 	
-	public PortListener()
+	public PortListener(GUI gui)
 	{
+		this.gui = gui;
 		interpreter = new SensorInterpreter(null);
 	}
 	
@@ -76,8 +78,10 @@ public class PortListener implements SerialPortEventListener
 			// add event listeners
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
+			gui.LOGGER.log(Level.INFO, "listener initialised successfully");
 		} catch(Exception e) {
-			System.err.println(e.toString());
+
+			gui.LOGGER.log(Level.WARNING, "listener init failed: " + e.toString());
 		}
 	}
 
@@ -102,13 +106,16 @@ public class PortListener implements SerialPortEventListener
 			String line = "";
 			try {
 				line = input.readLine();
+				gui.LOGGER.log(Level.INFO, "line received: " + line);
 			} catch (IOException e) {
 				System.err.println(e.toString());
 			}
 //			System.out.println(line);
 			try {
 				SensorData newData = interpreter.interpret(line);
+				gui.LOGGER.log(Level.INFO, "data object created: " + newData.toString());
 				gui.addDataToView(newData.toString());
+				gui.LOGGER.log(Level.INFO, "sent to view");
 			} catch(Exception e) {
 				System.err.println(e.toString());
 			}

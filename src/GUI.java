@@ -1,8 +1,8 @@
-
-
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -15,15 +15,16 @@ import javafx.stage.Stage;
  *
  */
 
-public class GUI extends Application{
+public class GUI extends Application
+{
+	public final static Logger LOGGER = Logger.getLogger(GUI.class.getName());
 	Pane root = new Pane();
 	Scene scene = new Scene(root,800,600);
 	private Button buttonStart ;
 	private Button buttonStop;
 	private ListView incomingDataView;
 	private PortListener portListener;
-	private Controller controller;
-	private TestPortListener testPortListener;
+	private PortListener listener;
 		
 	public static void main(String[] args)
 	{
@@ -34,13 +35,12 @@ public class GUI extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		this.controller= new Controller();
 		stage.setScene(scene);
 		stage.show();
 		stage.setTitle("Title goes here");
 		
 		addElements();
-		controller.getLogger().log(Level.INFO, "GUI booted.");
+		LOGGER.log(Level.INFO, "GUI booted.");
 	}
 
 	/**
@@ -51,9 +51,16 @@ public class GUI extends Application{
 		buttonStart.setLayoutX(10);
 		buttonStart.setLayoutY(10);
 		buttonStart.setOnAction((event) -> {
-			if (testPortListener == null) {
-				 addDataToView("*****Listening to port******");
-				testPortListener = new TestPortListener(this, controller);
+			if (listener == null) {
+				addDataToView("*****Listening to port******");
+				listener = new PortListener(this);
+				try {
+					listener.initialise();
+				} catch(Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		});
 			
@@ -78,8 +85,11 @@ public class GUI extends Application{
 	 * 
 	 * @param Data The data to add to the object
 	 */
-	public void addDataToView(String Data){
-		incomingDataView.getItems().add(Data);
+	public void addDataToView(String Data)
+	{
+		Platform.runLater(() -> {
+			incomingDataView.getItems().add(Data);
+		});
 	}
 
 }
