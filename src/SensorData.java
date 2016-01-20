@@ -14,6 +14,8 @@ public class SensorData {
 	private double surfaceTemp;
 	private Timestamp time;
 	private int sessionID;
+	
+
 
 	
 	//TODO add timeStamp to object
@@ -21,18 +23,18 @@ public class SensorData {
 	/**Abstract super class object for all sensor data objects.
 	 * Hold data common to all sensor data objects
 	 * 
-	 * @param nodeID The id of the node
+	 * @param sensorID The id of the node
 	 * @param sensorName The sensor name
 	 * @param airTemp the recorded air temp
 	 */
-	public SensorData(int sessionID, int nodeID, String sensorName,
+	public SensorData(int sessionID, int sensorID, String sensorName,
 			double airTemp, double surfaceTemp) {
 		super();
-		this.sensorID = nodeID;
+		this.sensorID = sensorID;
 		this.sensorName = sensorName;
 		this.airTemp = airTemp;
 		this.surfaceTemp = surfaceTemp;
-		this.sensorType = "Air Temp";		
+		this.sensorType = "Air Temperature Sensor";		
 		java.util.Date date= new java.util.Date();
 		this.time = new Timestamp(date.getTime());
 		this.sessionID= sessionID;
@@ -48,11 +50,11 @@ public class SensorData {
 		this.surfaceTemp = surfaceTemp;
 	}
 
-	public int getNodeID() {
+	public int getSensorID() {
 		return sensorID;
 	}
-	public void setNodeID(int nodeID) {
-		this.sensorID = nodeID;
+	public void setSensorID(int sensorID) {
+		this.sensorID = sensorID;
 	}
 	public String getSensorType() {
 		return sensorType;
@@ -78,6 +80,21 @@ public class SensorData {
 	}
 
 
+
+	public int getSessionID()
+	{
+		return sessionID;
+	}
+
+	public void setSessionID(int sessionID)
+	{
+		this.sessionID = sessionID;
+	}
+
+	public void setTime(Timestamp time)
+	{
+		this.time = time;
+	}
 
 	@Override
 	public String toString()

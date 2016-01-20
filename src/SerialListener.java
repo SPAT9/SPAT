@@ -96,7 +96,22 @@ public class SerialListener {
 				}
 				if (location != -1){
 					SensorData data = interpreter.interpret(recived.substring(0, location));
+					
+
+					//-------------------------------------------------------------
+
 					gui.addDataToView(data.toString());
+//					System.out.println(data.getClass().getName());
+					//gui.LOGGER.log(Level.INFO, "Im about to get in");
+					if (data instanceof HeatFluxSensorData){
+						//GUI.LOGGER.log(Level.INFO, "SensorID = " + data.getSensorID());
+						int sucsuess = gui.getDbAccess().insertHeatFluxSensorData((HeatFluxSensorData)data);
+						GUI.LOGGER.log(Level.INFO, "Sent to db result : " + sucsuess); 
+					}
+					//GUI.LOGGER.log(Level.INFO, "Im out!");
+					
+					//-----------------------------------------------------------------
+					
 					recived= recived.substring(location+1, recived.length());
 				}
 				

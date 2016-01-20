@@ -10,7 +10,7 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-public class PortListener implements SerialPortEventListener
+public class DONOTUSEPortListener implements SerialPortEventListener
 {
 	SensorInterpreter interpreter;
 	SerialPort serialPort;
@@ -35,7 +35,7 @@ public class PortListener implements SerialPortEventListener
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 115200;
 	
-	public PortListener(GUI gui)
+	public DONOTUSEPortListener(GUI gui)
 	{
 		this.gui = gui;
 		interpreter = new SensorInterpreter(gui.getSessionID());
@@ -118,6 +118,9 @@ public class PortListener implements SerialPortEventListener
 			try {
 				gui.LOGGER.log(Level.INFO, "data object created: " + newData.toString());
 				gui.addDataToView(newData.toString());
+				
+				
+				
 				gui.LOGGER.log(Level.INFO, "sent to view");
 			} catch(NullPointerException e) {
 				GUI.LOGGER.log(Level.WARNING,"fuckup", e);

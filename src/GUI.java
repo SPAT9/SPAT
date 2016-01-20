@@ -25,12 +25,19 @@ public class GUI extends Application
 	private ListView incomingDataView;
 //	private PortListener portListener;
 	private SerialListener listener;
+	private DBAccess dbAccess = new DBAccess();
 	public static void main(String[] args)
 	{
 		launch(args);
 	}
 	
 	
+	public DBAccess getDbAccess()
+	{
+		return dbAccess;
+	}
+
+
 	@Override
 	public void start(Stage stage) throws Exception
 	{
@@ -95,7 +102,10 @@ public class GUI extends Application
 	}
 
 	public int getSessionID() {
-		return 1; //TODO intergrate with DB
+		LOGGER.log(Level.INFO, "Session id = " + (dbAccess.getLastSessionID()+1) );
+		return dbAccess.getLastSessionID()+1;
+		
+		 //TODO eroor check for -1
 	}
 
 	
