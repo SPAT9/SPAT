@@ -25,7 +25,7 @@ public class GUI extends Application
 	private ListView incomingDataView;
 	private PortListener portListener;
 	private PortListener listener;
-	private Session session;
+	
 		
 	
 
@@ -36,7 +36,8 @@ public class GUI extends Application
 	
 	
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) throws Exception
+	{
 		
 		stage.setScene(scene);
 		stage.show();
@@ -55,8 +56,7 @@ public class GUI extends Application
 		buttonStart.setLayoutY(10);
 		buttonStart.setOnAction((event) -> {
 			if (listener == null) {
-				session = new Session();
-				addDataToView("*****Listening to port******");
+				this.addDataToView("*****Listening to port******");
 				listener = new PortListener(this);
 				try {
 					listener.initialise();
@@ -72,7 +72,9 @@ public class GUI extends Application
 		buttonStop.setLayoutX(10);
 		buttonStop.setLayoutY(50);
 		buttonStop.setOnAction((event) -> {
-		    // stop button was clicked, stop the session...
+			addDataToView("*****Not listening to port******");
+		    listener.close();
+		    listener = null;
 		});
 		
 		incomingDataView = new ListView();
@@ -96,12 +98,10 @@ public class GUI extends Application
 		});
 	}
 
-	public Session getSession() {
-		return session;
+	public int getSessionID() {
+		return 1; //TODO intergrate with DB
 	}
 
-	public void setSession(Session session) {
-		this.session = session;
-	}
+	
 
 }

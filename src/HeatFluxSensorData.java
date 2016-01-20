@@ -1,5 +1,5 @@
 
-public class HeatFluxSensorData extends TemperatureSensorData {
+public class HeatFluxSensorData extends SensorData {
 
 	private double heatFluxData;
 
@@ -18,4 +18,9 @@ public class HeatFluxSensorData extends TemperatureSensorData {
 		this.heatFluxData = heatFluxData;
 	}
 
+	@Override
+	public String toString()
+	{
+		return super.toString() + ", " + heatFluxData;
+	}
 }

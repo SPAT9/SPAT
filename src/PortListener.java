@@ -38,7 +38,7 @@ public class PortListener implements SerialPortEventListener
 	public PortListener(GUI gui)
 	{
 		this.gui = gui;
-		interpreter = new SensorInterpreter(null);
+		interpreter = new SensorInterpreter(gui.getSessionID());
 	}
 	
 	public void initialise() throws PortNotFoundException
@@ -80,7 +80,6 @@ public class PortListener implements SerialPortEventListener
 			serialPort.notifyOnDataAvailable(true);
 			gui.LOGGER.log(Level.INFO, "listener initialised successfully");
 		} catch(Exception e) {
-
 			gui.LOGGER.log(Level.WARNING, "listener init failed: " + e.toString());
 		}
 	}
@@ -103,21 +102,25 @@ public class PortListener implements SerialPortEventListener
 	public synchronized void serialEvent(SerialPortEvent oEvent)
 	{
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-			String line = "";
+			String line = null;
 			try {
 				line = input.readLine();
 				gui.LOGGER.log(Level.INFO, "line received: " + line);
 			} catch (IOException e) {
 				System.err.println(e.toString());
 			}
-//			System.out.println(line);
+			SensorData newData = null;
 			try {
-				SensorData newData = interpreter.interpret(line);
+				newData = interpreter.interpret(line);
+			} catch(IllegalArgumentException e) {
+				GUI.LOGGER.log(Level.WARNING, "interpreter failed: ", e);
+			}
+			try {
 				gui.LOGGER.log(Level.INFO, "data object created: " + newData.toString());
 				gui.addDataToView(newData.toString());
 				gui.LOGGER.log(Level.INFO, "sent to view");
-			} catch(Exception e) {
-				System.err.println(e.toString());
+			} catch(NullPointerException e) {
+				GUI.LOGGER.log(Level.WARNING,"fuckup", e);
 			}
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
