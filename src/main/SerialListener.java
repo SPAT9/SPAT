@@ -1,3 +1,4 @@
+package main;
 import java.io.BufferedReader;
 import java.util.logging.Level;
 
@@ -18,7 +19,7 @@ public class SerialListener {
 	private final int STOP_BITS = SerialPort.STOPBITS_1;
 	private final int PARITY = SerialPort.PARITY_NONE;
 
-	private static String recived = "";
+	private static String received  = "";
 	
 	public SerialListener(GUI gui)
 	{
@@ -26,13 +27,20 @@ public class SerialListener {
 		interpreter = new SensorInterpreter(gui.getSessionID());
 	}
 	
+	public SerialPort getSerialPort()
+	{
+		return serialPort;
+	}
+	
     public void initialise()
     {
-    	serialPort = new SerialPort("/dev/ttyACM0");
+    	String portName = null;
+    	
         String[] portNames = SerialPortList.getPortNames();
         for(int i = 0; i < portNames.length; i++){
-            serialPort = new SerialPort(portNames[i]);
+            portName = portNames[i];
         }
+        serialPort = new SerialPort(portName);
         GUI.LOGGER.log(Level.INFO, "port created: " + serialPort.toString());
         try {
             serialPort.openPort();//Open port
@@ -43,7 +51,6 @@ public class SerialListener {
             SerialPortReader reader = new SerialPortReader();
             serialPort.addEventListener(reader);//Add SerialPortEventListener
             GUI.LOGGER.log(Level.INFO, "reader added: " + reader.toString());
-//			input = new BufferedReader(new InputStreamReader(serialPort.readBytes()));
         }
         catch (SerialPortException ex) {
             System.out.println(ex);
@@ -66,58 +73,54 @@ public class SerialListener {
      * those that we put in the mask. In this case the arrival of the data and change the 
      * status lines CTS and DSR
      */
-    class SerialPortReader implements SerialPortEventListener {
+    class SerialPortReader implements SerialPortEventListener
+    {
 
         public void serialEvent(SerialPortEvent event) {
         	if(event.isRXCHAR()) {//If data is available
-        		int byteCount;
+    			String latestInput = null;
 				try {
-					byteCount = serialPort.getInputBufferBytesCount();
-	        		//System.out.println(byteCount);
-				} catch(SerialPortException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-    			String line = null;
-				try {
-					line = serialPort.readString();
+					latestInput = serialPort.readString();
 				} catch(SerialPortException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					GUI.LOGGER.log(Level.WARNING, "Can't read input buffer: ", e);
 				}
-				GUI.LOGGER.log(Level.INFO, "line received: " + line);
-				recived+=line;
-				GUI.LOGGER.log(Level.INFO, "Total received: " + recived);
-				int location = -1;
-				if (recived.contains("\n")){
-					location = recived.indexOf("\n");
-				} else if(recived.contains("\r")) {
-					location = recived.indexOf("\r");
-				}
-				if (location != -1){
-					SensorData data = interpreter.interpret(recived.substring(0, location));
-					
-
-					//-------------------------------------------------------------
-
-					gui.addDataToView(data.toString());
-//					System.out.println(data.getClass().getName());
-					//gui.LOGGER.log(Level.INFO, "Im about to get in");
-					if (data instanceof HeatFluxSensorData){
-						//GUI.LOGGER.log(Level.INFO, "SensorID = " + data.getSensorID());
-						int sucsuess = gui.getDbAccess().insertHeatFluxSensorData((HeatFluxSensorData)data);
-						GUI.LOGGER.log(Level.INFO, "Sent to db result : " + sucsuess); 
+				GUI.LOGGER.log(Level.INFO, "line received: " + latestInput);
+				received += latestInput;
+				GUI.LOGGER.log(Level.INFO, "Total received: " + received );
+				int index = getSubstringIndex(received);
+				if (index != -1){
+					try {
+						SensorData data = interpreter.interpret(received.substring(0, index));
+						gui.addDataToView(data.toString());
+						if(data instanceof HeatFluxSensorData) {
+							int success = gui.getDbAccess().insertHeatFluxSensorData((HeatFluxSensorData)data);
+							GUI.LOGGER.log(Level.INFO, "Sent to db result : " + success);
+						} else if(data instanceof SensorData) {
+							int success = gui.getDbAccess().insertSensorData((SensorData)data);
+							GUI.LOGGER.log(Level.INFO, "Sent to db result : " + success);
+						}
+						received = received .substring(index+1, received .length());
+					} catch(IllegalArgumentException | NullPointerException e) {
+						GUI.LOGGER.log(Level.WARNING, "Object not created: ", e);
 					}
-					//GUI.LOGGER.log(Level.INFO, "Im out!");
-					
-					//-----------------------------------------------------------------
-					
-					recived= recived.substring(location+1, recived.length());
 				}
 				
         	} else {
             	GUI.LOGGER.log(Level.WARNING, "some other event happened!");
             }
         }
+        
+        public int getSubstringIndex(String input)
+        {
+			int index = -1;
+			if (input .contains("\n")){
+				index = input.indexOf("\n");
+			} else if(received .contains("\r")) {
+				index = input.indexOf("\r");
+			}
+			return index;
+        }
+        
     }
+    
 }

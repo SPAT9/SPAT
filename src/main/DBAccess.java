@@ -1,10 +1,9 @@
+package main;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import javax.swing.table.TableModel;
 
 //import com.mysql.jdbc.Driver;
 //import net.proteanit.sql.DbUtils;
@@ -178,5 +177,10 @@ public class DBAccess {
 		}
 		
 		return returnCode;
+	}
+	
+	public int insertSensorData(SensorData data)
+	{
+		return -1;
 	}
 }

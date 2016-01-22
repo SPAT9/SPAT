@@ -1,3 +1,4 @@
+package main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,13 +62,7 @@ public class GUI extends Application
 			if (listener == null) {
 				this.addDataToView("*****Listening to port******");
 				listener = new SerialListener(this);
-				try {
-					listener.initialise();
-				} catch(Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				listener.initialise();
 			}
 		});
 			

@@ -1,3 +1,4 @@
+package main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +42,7 @@ public class DONOTUSEPortListener implements SerialPortEventListener
 		interpreter = new SensorInterpreter(gui.getSessionID());
 	}
 	
-	public void initialise() throws PortNotFoundException
+	public void initialise()
 	{
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -57,7 +58,7 @@ public class DONOTUSEPortListener implements SerialPortEventListener
 			}
 		}
 		if (portId == null) {
-			throw new PortNotFoundException();
+			//TODO throw new PortNotFoundException();
 		}
 
 		try {
@@ -143,9 +144,4 @@ public class DONOTUSEPortListener implements SerialPortEventListener
 //		t.start();
 //		System.out.println("Started");
 //	}
-}
-
-class PortNotFoundException extends Exception
-{
-	
 }
